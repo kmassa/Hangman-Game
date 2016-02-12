@@ -1,28 +1,33 @@
 "use strict";
 
 var Hangman = {
-    words:            [], // Set of words for hangman to choose from
+    words:            ["dopey", "sneezy", "doc", "happy", "grumpy", "sleepy", "bashful"], // Set of words for hangman to choose from
     currentWord:      '', // Current word for the game
     correctGuesses:   [], // Correct letters the user has guesses
     incorrectGuesses: [], // Wrong letters the user has guessed
-    maxGuesses:        0, // Maximum number of wrong guesses the user is allowed
+    maxGuesses:        8, // Maximum number of wrong guesses the user is allowed
 
     /**
      * Do all the initial game setup, register any necessary event listeners.
      * This method should only be run once.
      */
     init: function() {
-    
+        console.log("init");
+        $("#start").click(function(){
+            // Hangman.gameStart();
+        });
+        $("body").keypress(function(event){
+            Hangman.keyPressHandler(event);
+        });
+
     },
 
     /**
      * Start a new game. Should be used whenever a new hangman game is begun.
      */
     gameStart: function() {
-        $("#start").click(function(){
-        console.log("H")
-
-});
+        console.log("gameStart");
+        this.pickWord();
 
     },
 
@@ -30,7 +35,11 @@ var Hangman = {
      * Pick a new random word and assign it to the currentWord property
      */
     pickWord: function() {
-
+        var arrayLength = this.words.length;
+        var index = this.getRandomInt(0,arrayLength-1);
+        this.currentWord = this.words[index];
+        this.currentWord = this.currentWord.toLowerCase();
+        console.log("The selected word is " + this.currentWord);
     },
 
     /**
@@ -38,6 +47,8 @@ var Hangman = {
      * to remove things like event listeners or display a "New Game" button.
      */
     gameEnd: function() {
+        console.log("gameEnd");
+        //check if game was won and display win or lose message
 
     },
 
@@ -47,7 +58,22 @@ var Hangman = {
      * @param Event event - JavaScript event object
      */
     keyPressHandler: function(event) {
-        //figure out whether key pressed is in word
+        console.log("keyPressHandler");
+        if(this.incorrectGuesses.length >= this.maxGuesses){
+            alert("you've lost");
+        }
+        var letter = String.fromCharCode(event.keyCode);
+        letter = letter.toLowerCase();
+        if(this.hasLetterBeenGuessed(letter)){
+            alert("That's Been Guessed");
+        }
+        if(this.isLetterInWord(letter)){
+            this.addCorrectGuess(letter);
+            this.findLetterInWord(letter);
+        } else{
+            this.addIncorrectGuess(letter);
+        }
+
     },
 
     /**
@@ -59,7 +85,9 @@ var Hangman = {
      * @return integer
      */
     getRandomInt: function(min, max) {
-        //location of that word
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+
+
     },
 
     /**
@@ -70,6 +98,16 @@ var Hangman = {
      * @return boolean
      */
     hasLetterBeenGuessed: function(letter) {
+        console.log("hasLetterBeenGuessed");
+        var combinedArray = this.correctGuesses.concat(this.incorrectGuesses);
+
+        if(combinedArray.indexOf(letter) >= 0)
+        {
+            return true;
+        } else {
+            return false;
+        }
+
 
     },
 
@@ -81,6 +119,13 @@ var Hangman = {
      * @return boolean
      */
     isLetterInWord: function(letter) {
+        console.log("isLetterInWord");
+        var isInLetterInt = this.currentWord.indexOf(letter);
+        if(isInLetterInt >= 0){
+            return true;
+        } else {
+            return false;
+        }
 
     },
 
@@ -96,7 +141,15 @@ var Hangman = {
      * @return array - Array of indexes in the word
      */
     findLetterInWord: function(letter) {
-
+        console.log("findLetterInWord");
+        var result = [];
+        var wordArray = this.currentWord.split("");
+        wordArray.forEach(function(lchar, index){
+            if(lchar==letter){
+                result.push(index);
+            }
+        });
+        return result;
     },
 
     /**
@@ -105,6 +158,8 @@ var Hangman = {
      * @param string letter - Letter the user typed
      */
     addCorrectGuess: function(letter) {
+        this.correctGuesses.push(letter);
+        console.log("addCorrectGuess");
 
     },
 
@@ -114,7 +169,8 @@ var Hangman = {
      * @param string letter - Letter the user typed
      */
     addIncorrectGuess: function(letter) {
-
+        console.log("addIncorrectGuess");
+        this.incorrectGuesses.push(letter);
     },
 
     /**
@@ -123,6 +179,7 @@ var Hangman = {
      * @return boolean
      */
     isGameWon: function() {
+        console.log("isGameWon");
 
     }
 };

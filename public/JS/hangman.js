@@ -1,130 +1,98 @@
+
+
+
+window.onload = function () {
 "use strict";
 
-var Hangman = {
-    words:            [], // Set of words for hangman to choose from
-    currentWord:      '', // Current word for the game
-    correctGuesses:   [], // Correct letters the user has guesses
-    incorrectGuesses: [], // Wrong letters the user has guessed
-    maxGuesses:        0, // Maximum number of wrong guesses the user is allowed
+    Hangman ={
+    wordList: ["dopey", "sneezy", "doc", "happy", "grumpy", "sleepy", "bashful"],
+    wordArray:  [],
+    wordUArray: [],
+    lives:      4,
+    wordBank:   word.length,
+    word:       "",
+    wordU:      " ",
 
-    /**
-     * Do all the initial game setup, register any necessary event listeners.
-     * This method should only be run once.
-     */
-    init: function() {
-    
+    // pullWord = function(){
+    //     word = wordList[math.floor(math.random() * wordBank)];
+    //     console.log("h");
+    // },
+
+    //get letter on click, may want to reassign as value
+    // // $(function(){
+    //    $("#a").click(function(event){
+    //     event.updateLetter("A");
+    //     // updateLetter("A");
+    //    })
+    // // });
+    // $('#a').click(function() {
+    //         var letter = $this.val('a');
+    //         console.log("h");
+    //     });
+
+    guessInput.onclick = function () {
+        this.value = '';
+    };
+
+    pullWord: function() {
+        var arrayLength = this.words.length;
+        var index = this.getRandomInt(0,arrayLength-1);
+        this.currentWord = this.words[index];
+        this.currentWord = this.currentWord.toLowerCase();
+        console.log("The selected word is " + this.currentWord);
     },
 
-    /**
-     * Start a new game. Should be used whenever a new hangman game is begun.
-     */
-    gameStart: function() {
-        $("#start").click(function(){
-        console.log("H");
+    //used to pull word from wordlist
+    setUnderline = function(){
+        pullWord();
+        for (i=0; i<word.length; i++){
+            wordArray[i] = main.word.charAt(i);
+            wordUArray[i] = " ";
+        }
+        wordU = wordUArray.join (" ");
+        document.getElementById("word").innerHTML=wordU;
 
-})
-
+        document.getElementById("numletters").innerHTML = word.length;
     },
 
-    /**
-     * Pick a new random word and assign it to the currentWord property
-     */
-    pickWord: function() {
-
+    //check letter and see if it is array
+    updateLetter = function (letter){
+        changes = 0;
+        for (i=0; i<word.length; i++){
+            wordArray[i] = word.charat(i);
+            if (word.charat(i) == letter){
+                wordUArray[i] == letter;
+                changes +=1
+            }
+        }
+        if (changes < 1){
+            lives -= 1;
+            document.getElementById("lives").innerHTML = lives;
+        }
+        wordU = wordUArray.join ("");
+        document.getElementById("word").innerHTML = wordU;
     },
 
-    /**
-     * The game has finished. Use this method at the end of the game if necessary
-     * to remove things like event listeners or display a "New Game" button.
-     */
-    gameEnd: function() {
+    //determining if you won
+        var word1 = wordArray.join("");
+        var word2 = wordUArray.join("");
 
+    if (word1 == word2){
+        alert("you won");
+        window.location.reload();
+    },
+    //if you run out of lives
+    if (main.lives< 1){
+        document.getElementById ("word").innerHTML = word1;
+        alert ("Please try again");
+        window.location.reload();
     },
 
-    /**
-     * Event handler for when a keyboard key is pressed.
-     *
-     * @param Event event - JavaScript event object
-     */
-    keyPressHandler: function(event) {
-        //figure out whether key pressed is in word
-    },
-
-    /**
-     * Random number generator, should return an integer between min and max.
-     *
-     * @param integer min
-     * @param integer max
-     *
-     * @return integer
-     */
-    getRandomInt: function(min, max) {
-        //location of that word
-    },
-
-    /**
-     * Check if the user has guessed a given letter before (either right or wrong).
-     *
-     * @param string letter - Letter the user typed
-     *
-     * @return boolean
-     */
-    hasLetterBeenGuessed: function(letter) {
-
-    },
-
-    /**
-     * Return whether or not a letter is in the current word.
-     *
-     * @param string letter - Letter the user typed
-     *
-     * @return boolean
-     */
-    isLetterInWord: function(letter) {
-
-    },
-
-    /**
-     * Return the indexes where a given letter occurs in the current word
-     * For example, if the word is "banana", and the letter passed was "a"
-     * then this function should return [1, 3, 5]. If the letter passed was
-     * "b" then the function should return [0]. If the letter was "q" then
-     * it should return [].
-     *
-     * @param string letter - Letter the user typed
-     *
-     * @return array - Array of indexes in the word
-     */
-    findLetterInWord: function(letter) {
-
-    },
-
-    /**
-     * Add a letter to the array of correct guesses and handle any additional steps
-     *
-     * @param string letter - Letter the user typed
-     */
-    addCorrectGuess: function(letter) {
-
-    },
-
-    /**
-     * Add a letter to the array of incorrect guesses and handle any additional steps
-     *
-     * @param string letter - Letter the user typed
-     */
-    addIncorrectGuess: function(letter) {
-
-    },
-
-    /**
-     * Check whether all the letters in the word have been guessed
-     *
-     * @return boolean
-     */
-    isGameWon: function() {
-
-    }
 };
 
-Hangman.init();
+
+
+
+}());
+
+    Hangman.init();
